@@ -105,10 +105,172 @@ let z: char = 'ℤ'; // Com anotação explicita
 let heart_eyed_cat = '😻';
 ```
 
-#### [Tipos Compostos](https://doc.rust-lang.org/book/ch03-02-data-types.html#compound-types)
+### [Tipos Compostos](https://doc.rust-lang.org/book/ch03-02-data-types.html#compound-types)
 
-## Funções
+Tipos compostos pode agrupar vários valores em um tipo. A ferrugem tem dois tipos de compostos primitivos: tuplas e Arrays.
 
-## Comentários
+#### [O tipo tupla](https://doc.rust-lang.org/book/ch03-02-data-types.html#the-tuple-type)
 
-## Fluxo de controle
+Tuplas tem o tamanho fixo, uma vez definido um tamanho ele será imutável, podem conter varios tipos de dados em uma única tupla. Definida com `()`.
+
+```rust
+let tup: (u32, bool, i8) = (222, false, -1);
+let tup2 = (-44, 'A', 33);
+```
+
+Para obter os valores da tupla, podemos desestrutura-la.
+As variaveis serão preenchidas respectivamente.
+
+```rust
+let tup = (-44, 'A', 33);
+let (x, y, z) = tup; // x -> -44 ; y -> 'A'; z -> 33;
+```
+
+É possível acessar via indice também
+
+```rust
+let tup: (u32, bool, i8) = (214, true, -1);
+let tup_val = tup.0; // tup_val -> 214
+```
+
+- **OBS.:**A tupla sem valores tem um nome especial, unidade. Este valor e seu o tipo correspondente é escrito `()` e representam um valor vazio ou um tipo de retorno vazio. As expressões retornam implicitamente o valor unitário se não o fizerem retornar qualquer outro valor.
+
+#### [O tipo array](https://doc.rust-lang.org/book/ch03-02-data-types.html#the-array-type)
+
+Arrays tem um comprimento fixo e todos os seus valores dever obedecer a apenas um tipos. São definidos com `[]`.
+
+```rust
+let a = [1, 2, 3, 4, 5];
+```
+
+As matrizes são mais úteis quando você sabe que o número de elementos não o será preciso mudar
+
+- Você escreve o tipo de uma matriz usando colchetes com o tipo de cada elemento, um ponto e vírgula e, em seguida, o número de elementos na matriz, assim:
+
+```rust
+let array: [i32; 5] = [1, 2, 3, 4, 5];
+```
+
+Também pode-se definir um valo inicial com:
+
+```rust
+let array = [3; 5]
+//É o mesmo que dizer
+let array = [3, 3, 3, 3, 3];
+```
+
+sendo assim `[tipo/valor_inicial; tamanho_do_array]`.
+
+Pode-se acessar o valor em alguma posição do vetor com `nome_do_vetor[indice]`
+
+```rust
+let a = [1, 2, 3, 4, 5];
+
+let first = a[0];
+let second = a[1];
+```
+
+- Caso tente acessar um index fora to tamanho do vetor, ocorrerá uma erro de "index out of bounds"
+
+## [Funções](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html)
+
+Funções podem executar um bloco de código no momento em que for preciso, são declaradas com `fn`. É usado por padrão _snake case_ para o nome das funções.
+
+```rust
+fn main() {
+    println!("Hello, world!");
+
+    another_function(); // <- "()" chama a função
+}
+
+fn another_function() {
+    println!("Outra função.");
+}
+```
+
+Rust não se importa onde você define suas funções, apenas que elas estejam definido em algum lugar em um escopo que pode ser visto pelo chamador. Ou seja, pode ser antes ou depois do `main`.
+
+### [Parâmetros](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html#parameters)
+
+É algum valor que é passado de fora para dentro do escopo da função. Valor esse, definico entre os parenteses `funcao(5)`.
+Rust exige tipagem do parâmetro, pode ser qualquer tipo anteriormente citado.
+
+```rust
+fn main() {
+    funcao(5) //chamada de função com parâmetro
+}
+
+fn funcao(x: i32) {
+    println!("O valor de x é: {x}");
+}
+```
+
+### [Declarações e Expressões](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html#statements-and-expressions)
+
+Os corpos funcionais são compostos por uma série de declarações que terminam opcionalmente em um expressão.
+
+- Declarações são instruções que realizam alguma ação e não retornam um valor. (faz algo mas não retorna)
+- Expressões avaliar até um valor resultante. (retorna alguma coisa)
+
+Ex.: `let` é uma sintaxe que faz algo, mas não retorna nada. Uma declaração basicamente.
+
+```rust
+let a = 6; // <- let é uma declaração
+```
+
+É possivel que qualquer bloco de código seja uma expressão.
+
+```rust
+let x = {
+        let a = 3;
+        a + 1 // Aqui precisa não ter o ; para dezer que a expressão não acabou
+    };
+println!("O valor de x é: {x}");
+```
+
+onde na expressão,
+
+```rust
+{
+    let a = 3;
+    a + 1
+}
+```
+
+é um bloco que é avaliado como **4**. Observe que `a + 1` não tem o `;`, expressões não incluem ponto e vírgula(`;`) final. Se você adicionar um ponto e vírgula ao final de um expressão, você a transforma em uma instrução e ela não retornará um valor.
+
+### [Funções com valores de retorno](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html#functions-with-return-values)
+
+Os retornos de função em rust devem ser definidos na declaração da função se houver um retorno com `->`. Como já mostrado o retorno de uma função pode ser uma expressão final sem o `;`.
+
+```rust
+fn five() -> i32 {
+    5
+}
+```
+
+Outro exemplo com parâmetros
+
+```rust
+fn main() {
+    let y = mais_um(5); // "y" agora tem o valor de 6, poís será o retono de função
+}
+
+fn mais_um(x: i32) -> i32 {
+    x + 1
+}
+```
+
+Essa função retorna o valor `5` mesmo sem a sintaxe `return`. O `return` permite sair de uma função antecipadamente da função.
+
+## [Comentários](https://doc.rust-lang.org/book/ch03-04-comments.html)
+
+Podem ser escritos com `//` e inutilizam tudo oque vem depois até a proxima linha
+
+```rust
+// Comentário
+let x = 1; //Comentário na linha
+//Outro comentário
+```
+
+## [Fluxo de controle](https://doc.rust-lang.org/book/ch03-05-control-flow.html)
