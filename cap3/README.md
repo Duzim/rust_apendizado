@@ -339,4 +339,115 @@ Para sair de um `loop` ou qualquer outro laço de repetição basta usar o `brea
 
 ##### [Retornando valores de loops](https://doc.rust-lang.org/book/ch03-05-control-flow.html#returning-values-from-loops)
 
+Um dos usos de a `loop` é tentar novamente uma operação que você sabe que pode falhar, como como verificar se um thread concluiu seu trabalho. Você também pode precisar passar o resultado dessa operação fora do `loop` para o resto do seu código. Pendência isso, você pode adicionar o valor que deseja retornar após o `break` expressão você use para parar o `loop`; esse valor será retornado para fora do `loop` para que você pode usá-lo
 
+```rust
+let mut counter = 0;
+
+let result = loop {
+    counter += 1;
+
+    if counter == 10 {
+        break counter * 2;
+    }
+};
+```
+
+##### [Desambiguando com rótulos de loop](https://doc.rust-lang.org/book/ch03-05-control-flow.html#disambiguating-with-loop-labels)
+
+A desanbiguidade de loops, é basicamente adicionar um label (uma etiqueta) a um `loop`, `for`ou `while`. É utilizado normalmente quando se tem aninhamentos de loops e é preciso para um loops exterior. O `break` e o `continue` aplicam suas funções apenas nos loops mais internos, caso precise parar algum loops exterior, basta utilizar a _tag desse loop_, como o seguinte exemplo.
+
+Se define um tag de loop com `'` antes do nome da _tag_ (`'tag_do_loop`).
+
+```rust
+fn main() {
+    let mut contador_externo = 0;
+
+    // Nomeamos o loop de fora como 'externo
+    'externo: loop {
+        println!("Contagem externa: {}", contador_externo);
+        let mut contador_interno = 5;
+
+        // Nomeamos o loop de dentro como 'interno (opcional, mas bom para clareza)
+        'interno: loop {
+            println!("  Contagem interna: {}", contador_interno);
+
+            if contador_interno == 3 {
+                println!("  -> Parando apenas o loop interno.");
+                break; // Isso quebra apenas o loop 'interno
+            }
+
+            if contador_externo == 2 {
+                println!("  -> Quebrando TUDO a partir do loop interno!");
+                break 'externo; // Isso resolve a ambiguidade e quebra o loop de fora!
+            }
+
+            contador_interno -= 1;
+        }
+
+        contador_externo += 1;
+    }
+
+    println!("Fim do programa.");
+}
+```
+
+O mesmo vale para `for` e `while`.
+
+```rust
+fn main() {
+    let matriz = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+    ];
+
+    let alvo = 5;
+
+    'busca: for linha in matriz {
+        for numero in linha {
+            if numero == alvo {
+                println!("Encontramos o {}! Parando a busca inteira.", alvo);
+                // Se usássemos apenas "break", ele iria para a próxima linha.
+                // Com "break 'busca", ele sai dos dois loops imediatamente.
+                break 'busca;
+            }
+        }
+    }
+}
+```
+
+#### [while](http://doc.rust-lang.org/book/ch03-05-control-flow.html#streamlining-conditional-loops-with-while)
+
+O `while` executa o bloco de código **_enquanto_** sua condição for verdadeira.
+Caso não seja, não executará mais.
+
+Uma forma interssante de se ler o `while` é: "`enquanto` isso (condição) acontece, execute isso (bloco de código)".
+
+```rust
+fn main() {
+    let mut number = 3;
+
+    while number != 0 {
+        println!("{number}!");
+
+        number -= 1;
+    }
+
+    println!("LIFTOFF!!!");
+}
+```
+
+#### [for](https://doc.rust-lang.org/book/ch03-05-control-flow.html#looping-through-a-collection-with-for)
+
+O `for` vai iterar (percorrer índice por índice) sobre algo. Como uma lista ou tupla.
+
+Uma forma interessante de se ler o `for` é: "`para` cada elemento em _algo_ (lista iterada) execute isso (bloco entre `{}`)".
+
+```rust
+let a = [10, 20, 30, 40, 50];
+
+for element in a {
+    println!("the value is: {element}");
+}
+```
