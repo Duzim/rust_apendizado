@@ -274,3 +274,69 @@ let x = 1; //Comentário na linha
 ```
 
 ## [Fluxo de controle](https://doc.rust-lang.org/book/ch03-05-control-flow.html)
+
+### Sintaxe `if`
+
+Basicamente `se` uma condição é atendida executa algo, `se não` faz outra coisa ou não faz nada.
+
+```rust
+if 1 <= 1 {
+    //Faz algo
+}
+//Não faz nada
+
+//if else
+if 5 > 0 {
+    //Faz algo
+} else {
+    //Faz outra coisa
+}
+```
+
+Podem também ser aninhados como o seguinte
+
+```rust
+let a = 3;
+if a == 1 {
+    //Faz algor
+} else if a == 2 {
+    //Faz outra coisa
+} else if a == 3 {
+    // ...
+} else {
+    // Caso não seja nenhum dos outros
+}
+```
+
+Necessariamente a condição precisa ser `bool`.
+
+#### [Usando `if` com `let`](https://doc.rust-lang.org/book/ch03-05-control-flow.html#using-if-in-a-let-statement)
+
+Como `if` é uma expressão, podemos usá-lo em conjunto com um `let` e atribuir o resultado a uma variavel
+
+```rust
+let condicao = true;
+let numero = if condicao {5} else {6};
+```
+
+funcionando como um operador ternario, os valores a serem retornados precisam ser do mesmo tipo. Como no exemplo acima onde ambos são inteiros.
+
+### [Repetição com Loops](https://doc.rust-lang.org/book/ch03-05-control-flow.html#repetition-with-loops)
+
+Rust tem três tipos de loops: `loop`, `while`, e `for`.
+
+#### [Loop](https://doc.rust-lang.org/book/ch03-05-control-flow.html#repeating-code-with-loop)
+
+O `loop` é utilizado para executar um bloco de código repetidamente ou para sempre ou até que você diga explicitamente para parar.
+
+```rust
+loop {
+    println!("again!");
+}
+```
+
+Para sair de um `loop` ou qualquer outro laço de repetição basta usar o `break` e o `continue` para pular uma iterção do laço.
+
+##### [Retornando valores de loops](https://doc.rust-lang.org/book/ch03-05-control-flow.html#returning-values-from-loops)
+
+

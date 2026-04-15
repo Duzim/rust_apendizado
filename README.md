@@ -3,7 +3,7 @@
 
 # Rust: Jornada de Aprendizado
 
-_Meu repositório pessoal para documentar os estudos, conceitos e práticas com a linguagem Rust._
+_Meu repositório pessoal para documentar os estudos, conceitos e práticas com a linguagem `Rust`._
 
 [![Rust](https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org/)
 [![The Rust Book](https://img.shields.io/badge/The_Rust_Book-F24E1E?style=for-the-badge&logo=rust&logoColor=white)](https://doc.rust-lang.org/book/title-page.html)
