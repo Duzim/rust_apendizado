@@ -1,0 +1,74 @@
+{
+  "workbench.colorCustomizations": {
+    // Paleta Oficial: Charcoal e Ferro
+    "editor.background": "#1f1f1f",
+    "sideBar.background": "#1a1a1a",
+    "activityBar.background": "#1a1a1a",
+    "activityBar.foreground": "#ff4d29",
+    
+    // Barra de Status em Ferrugem (Rust)
+    "statusBar.background": "#262626",
+    "statusBar.foreground": "#ff4d29",
+    "statusBar.border": "#333333",
+
+    // Destaques e Seleção
+    "editorCursor.foreground": "#ff4d29",
+    "editor.selectionBackground": "#444444",
+    "editor.lineHighlightBackground": "#262626",
+    "editorLineNumber.activeForeground": "#ff4d29",
+
+    // Abas Estilo Industrial
+    "tab.activeBackground": "#1f1f1f",
+    "tab.activeForeground": "#ff4d29",
+    "tab.inactiveBackground": "#1a1a1a",
+    "tab.border": "#333333"
+  },
+
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": [
+          "keyword",
+          "storage.type",
+          "storage.modifier",
+          "keyword.control"
+        ],
+        "settings": {
+          "foreground": "#ff4d29" // Laranja da engrenagem do Rust
+        }
+      },
+      {
+        "scope": [
+          "entity.name.function",
+          "support.function",
+          "variable.function"
+        ],
+        "settings": {
+          "foreground": "#f2e5bc" // Creme metálico
+        }
+      },
+      {
+        "scope": "string",
+        "settings": {
+          "foreground": "#98971a" // Verde musgo industrial
+        }
+      },
+      {
+        "scope": [
+          "entity.name.type",
+          "storage.type.cs"
+        ],
+        "settings": {
+          "foreground": "#fabd2f" // Amarelo/Ouro para Types e Structs
+        }
+      },
+      {
+        "scope": "comment",
+        "settings": {
+          "foreground": "#666666",
+          "fontStyle": "italic"
+        }
+      }
+    ]
+  }
+}

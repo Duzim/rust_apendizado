@@ -39,3 +39,4 @@ Abaixo está a divisão de capítulos estudados. Navegue pelos links para acessa
   - Funções
   - Comentários
   - Fluxo de controle (`if`, `loops`, `while`, `for`)
+- [Capitulo 4 - Compreendendo Ownership](./cap4/)
