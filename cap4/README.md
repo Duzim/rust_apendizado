@@ -14,38 +14,38 @@ Basicamente quando estamos tratando de rust precisamos ter em mente dois grupos 
 
 - `Heap` (_Monte_): Armazena dados cujo tamanho pode mudar (como uma `String` ou um `Vec`). O sistema operacional aloca um espaço, marca-o como ocupado e retorna um ponteiro (o endereço de onde o dado está).
 
-
+```mermaid
 graph TD
-    %% Estilização visual para destacar o que é válido e inválido
-    classDef valid fill:#2b3a42,stroke:#dea584,stroke-width:2px,color:#fff;
-    classDef invalid fill:#3a2b2b,stroke:#ff4d29,stroke-width:2px,stroke-dasharray: 5 5,color:#7c7c7c;
-    classDef heap fill:#1f1f1f,stroke:#b5bd68,stroke-width:2px,color:#fff;
+%% Estilização visual para destacar o que é válido e inválido
+classDef valid fill:#2b3a42,stroke:#dea584,stroke-width:2px,color:#fff;
+classDef invalid fill:#3a2b2b,stroke:#ff4d29,stroke-width:2px,stroke-dasharray: 5 5,color:#7c7c7c;
+classDef heap fill:#1f1f1f,stroke:#b5bd68,stroke-width:2px,color:#fff;
 
-    subgraph Passo 1: let s1 = String::from("hello")
+    subgraph Passo1 ["Passo 1: let s1 = String::from('hello')"]
         direction LR
-        subgraph Stack 1 [Stack]
+        subgraph Stack1 [Stack]
             S1["s1<br/>-----------<br/>ptr: 0x123<br/>len: 5<br/>capacity: 5"]:::valid
         end
-        subgraph Heap 1 [Heap]
+        subgraph Heap1 [Heap]
             H1[("Endereço: 0x123<br/>Valor: 'hello'")]:::heap
         end
         S1 == Aponta para ==> H1
     end
 
-    subgraph Passo 2: let s2 = s1
+    subgraph Passo2 ["Passo 2: let s2 = s1"]
         direction LR
-        subgraph Stack 2 [Stack]
+        subgraph Stack2 [Stack]
             S1_INV["s1 (Inválido) ❌<br/>-----------<br/>ptr: ???<br/>len: ???<br/>capacity: ???"]:::invalid
             S2["s2<br/>-----------<br/>ptr: 0x123<br/>len: 5<br/>capacity: 5"]:::valid
         end
-        subgraph Heap 2 [Heap (Intocada)]
+        subgraph Heap2 [Heap Intocada]
             H2[("Endereço: 0x123<br/>Valor: 'hello'")]:::heap
         end
 
         S2 == Aponta para ==> H2
-        S1_INV -. Tentativa de acesso bloqueada pelo Compilador .-x H2
+        S1_INV -. Tentativa bloqueada pelo Compilador .-x H2
     end
-
+```
 
 ## Regras de Ouro
 
