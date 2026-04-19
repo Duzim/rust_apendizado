@@ -113,6 +113,36 @@ fn main() {
 }
 ```
 
+Resp.:
+
+<details>
+<summary>Resposta do exercicio acima:</summary>
+
+Minha Resposta:
+
+```rust
+fn ultima_palavra(s: &str) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().rev().enumerate() {
+        if item == b' ' {
+            let a = s.len();
+            return &s[a - i..];
+        }
+    }
+    &s
+}
+
+```
+
+Correção:
+
+```rust
+
+```
+
+</details>
+
 ## Exercício 4: O Desafio das Regras de Ouro
 
 **Objetivo:** Entender por que o Rust impede este código.

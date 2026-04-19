@@ -1,11 +1,18 @@
 fn main() {
-    let mut comando = String::from("build");
-    add_prefix(&mut comando);
-    println!("{}", comando); // Deve imprimir: "Cargo: build"
+    let frase = String::from("Aprendendo Rust agora");
+    let palavra = ultima_palavra(&frase);
+
+    println!("A última palavra é: [{}]", palavra); // Deve imprimir: "agora"
 }
 
-fn add_prefix(str_value: &mut String) {
-    let mut temp = String::from("Cargo: ");
-    temp.push_str(str_value);
-    *str_value = temp;
+fn ultima_palavra(s: &str) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().rev().enumerate() {
+        if item == b' ' {
+            let a = s.len();
+            return &s[a - i..];
+        }
+    }
+    &s
 }
