@@ -62,7 +62,40 @@ fn main() {
 
     println!("{}", comando); // Deve imprimir: "Cargo: build"
 }
-````
+```
+
+Resp.:
+
+<details>
+<summary>Resposta do exercicio acima:</summary>
+
+Minha Resposta:
+
+```rust
+fn main() {
+    let mut comando = String::from("build");
+    add_prefix(&mut comando);
+    println!("{}", comando); // Deve imprimir: "Cargo: build"
+}
+
+fn add_prefix(str_value: &mut String) {
+    let mut temp = String::from("Cargo: ");
+    temp.push_str(str_value);
+    *str_value = temp;
+}
+
+```
+
+Correção:
+
+```rust
+fn add_prefix(str_value: &mut String) {
+    // Insere no índice 0 (o início da string)
+    str_value.insert_str(0, "Cargo: ");
+}
+```
+
+</details>
 
 ## Exercício 3: O Guardião de Slices
 
