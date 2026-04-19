@@ -135,10 +135,40 @@ fn ultima_palavra(s: &str) -> &str {
 
 ```
 
-Correção:
+Correção com apenas recursos apresentados até agora:
 
 ```rust
+fn main() {
+    let frase = String::from("Aprendendo Rust agora");
+    let palavra = ultima_palavra(&frase);
 
+    println!("A última palavra é: {}", palavra); // Imprime: "agora"
+}
+
+fn ultima_palavra(s: &str) -> &str {
+    let bytes = s.as_bytes();
+
+    // Assumimos que não há espaço no início.
+    // Se não acharmos nenhum espaço, a palavra inteira é a última.
+    let mut ultimo_espaco = 0;
+    let mut tem_espaco = false;
+
+    // Varremos os bytes do início ao fim, como o livro ensina
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            ultimo_espaco = i;
+            tem_espaco = true;
+        }
+    }
+
+    if tem_espaco {
+        // Retornamos um Slice logo após o último espaço encontrado até o fim
+        &s[ultimo_espaco + 1..]
+    } else {
+        // Se não teve espaço, retorna a fatia da string toda
+        &s[..]
+    }
+}
 ```
 
 </details>
@@ -160,3 +190,27 @@ fn main() {
     println!("{}, {}, e {}", r1, r2, r3);
 }
 ```
+
+<details>
+<summary>Resposta do exercicio acima:</summary>
+
+Minha Resposta:
+
+```rust
+fn main() {
+    let status = String::from("Ativo");
+
+    let r1 = &status;
+    let r2 = &status;
+    let r3 = &status; // O PROBLEMA ESTÁ AQUI
+
+    println!("{}, {}, e {}", r1, r2, r3);
+}
+
+```
+
+Correção:
+
+<p>Aqui sim o compilador grita! Ele pensa: "Espera aí, r1 e r2 estão lendo os dados. Se eu permitir que r3 tenha o poder de modificar (&mut) o status ao mesmo tempo, o chão pode sumir debaixo dos pés de r1 e r2!" Isso previne problemas clássicos de leitura de memória suja (conhecidos como data races).</p>
+
+</details>

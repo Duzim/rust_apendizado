@@ -1,18 +1,9 @@
 fn main() {
-    let frase = String::from("Aprendendo Rust agora");
-    let palavra = ultima_palavra(&frase);
+    let status = String::from("Ativo");
 
-    println!("A última palavra é: [{}]", palavra); // Deve imprimir: "agora"
-}
+    let r1 = &status;
+    let r2 = &status;
+    let r3 = &status; // O PROBLEMA ESTÁ AQUI
 
-fn ultima_palavra(s: &str) -> &str {
-    let bytes = s.as_bytes();
-
-    for (i, &item) in bytes.iter().rev().enumerate() {
-        if item == b' ' {
-            let a = s.len();
-            return &s[a - i..];
-        }
-    }
-    &s
+    println!("{}, {}, e {}", r1, r2, r3);
 }
