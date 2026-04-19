@@ -70,3 +70,84 @@ let s2 = s1;
 ```
 
 ## Referenciando e Borrowing (Empréstimo)
+
+Se não quisermos perder a posse de um valor toda vez que passamos ele para uma função, usamos Referências (&). Isso é chamado de Borrowing.
+
+- **Imutável (`&T`):** Você pode ter várias leituras ao mesmo tempo.
+
+- **Mutável (`&mut T`):** Você só pode ter uma única referência mutável por vez (evitando data races).
+
+```rust
+fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&s1);
+
+    println!("The length of '{s1}' is {len}.");
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+}
+```
+
+Oque está ocorrendo na verdade é isso:
+
+<div align="center">
+    <img src="https://doc.rust-lang.org/book/img/trpl04-06.svg" height="250" alt="Imagem de como funciona o Empréstimo">
+</div>
+
+### [Dangling References](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html#dangling-references)
+
+As Regras de Referências
+
+- A qualquer momento, você pode ter ou uma referência mutável ou qualquer número de referências imutáveis.
+- As referências devem ser sempre válidas.
+
+## [O tipo de fatia(Slice)](https://doc.rust-lang.org/book/ch04-03-slices.html#the-slice-type)
+
+Slices (fatias) permitem que você referencie uma **sequência contígua**(Com endereços de memoria coladinhos) de elementos dentro de uma coleção, em vez de referenciar a coleção inteira.
+
+Diferente de uma `String` ou um `Vec`, o Slice é um tipo de referência, o que significa que ele não possui ownership (propriedade) dos dados. Ele apenas "aponta" para onde os dados começam e diz quantos elementos devem ser lidos a partir dali.
+
+### [Slices de Strings(&str)](https://doc.rust-lang.org/book/ch04-03-slices.html#string-slices)
+
+Uma fatia de string é uma referência a uma parte de uma `String`. Na memória, ela é representada por dois valores na `stack`: um ponteiro para o ponto inicial e o tamanho (comprimento) da fatia.
+
+```rust
+let s = String::from("hello world");
+
+let hello = &s[0..5];  // "hello"
+let world = &s[6..11]; // "world"
+```
+
+```mermaid
+graph TD
+classDef heap fill:#1f1f1f,stroke:#b5bd68,stroke-width:2px,color:#fff;
+classDef slice fill:#2b3a42,stroke:#81a2be,stroke-width:2px,color:#fff;
+
+    subgraph Memoria ["Visualização da Slice na Heap"]
+        direction LR
+        subgraph Stack [Stack]
+            S["s (String)<br/>-----------<br/>ptr: 0x500<br/>len: 11<br/>cap: 11"]
+            SL["world (&str)<br/>-----------<br/>ptr: 0x506<br/>len: 5"]:::slice
+        end
+
+        subgraph Heap [Heap]
+            H[("h | e | l | l | o |   | w | o | r | l | d<br/>[0] [1] [2] [3] [4] [5] [6] [7] [8] [9] [10]")]:::heap
+        end
+
+        S -- "aponta para o início [0]" --> H
+        SL -- "aponta para o índice [6]" --> H
+    end
+```
+
+### [Outros Slices](https://doc.rust-lang.org/book/ch04-03-slices.html#other-slices)
+
+Embora fatias de strings sejam as mais comuns, você pode usar slices para qualquer coleção contígua, como arrays:
+
+```rust
+let a = [1, 2, 3, 4, 5];
+
+let sliced_a = &a[1..3]; // Referencia os elementos [2, 3]
+```
