@@ -151,3 +151,7 @@ let a = [1, 2, 3, 4, 5];
 
 let sliced_a = &a[1..3]; // Referencia os elementos [2, 3]
 ```
+
+## [Exercicios](./Exercicios.md)
+
+Finalizando o Capitulo com [exercicios](./Exercicios.md).

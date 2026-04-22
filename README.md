@@ -40,3 +40,7 @@ Abaixo está a divisão de capítulos estudados. Navegue pelos links para acessa
   - Comentários
   - Fluxo de controle (`if`, `loops`, `while`, `for`)
 - [Capitulo 4 - Compreendendo Ownership](./cap4/)
+  - _Ownership_(Propriedade)
+  - _Borrowing_(Emprestimo)
+  - Slices
+- [Capitulo 5- Structs](./cap5/)
