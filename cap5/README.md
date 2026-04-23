@@ -119,7 +119,9 @@ fn main() {
 }
 ```
 
-## Exemplo de uso de `structs`
+## [Exemplo de uso de `structs`](https://doc.rust-lang.org/book/ch05-02-example-structs.html)
+
+O código abaixo pode ser feito de diversas formas diferentes, mas para feito com structs pode ser feito da seguinte maneira:
 
 ```rust
 fn main() {
@@ -129,15 +131,15 @@ fn main() {
         unit: String::from("cm"),
     };
 
-    let area_ret = calc_area(ret);
+    let area_ret = calc_area(&ret);
 
     println!("Area do retangulo é: {}", area_ret);
 }
 
-fn calc_area(ret: Retangulo) -> String {
+fn calc_area(ret: &Retangulo) -> String {
     let a = ret.width * ret.heigth;
     let mut str_a = a.to_string();
-    str_a.push_str(&    .unit);
+    str_a.push_str(&ret.unit);
     str_a
 }
 
@@ -147,3 +149,52 @@ struct Retangulo {
     unit: String,
 }
 ```
+
+### [Para debugar o código com diretivas](https://doc.rust-lang.org/book/ch05-02-example-structs.html#adding-functionality-with-derived-traits)
+
+```rust
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+fn main() {
+    let scale = 2;
+    let rect1 = Rectangle {
+        width: dbg!(30 * scale),
+        height: 50,
+    };
+    dbg!(&rect1);
+}
+```
+
+## [Métodos](https://doc.rust-lang.org/book/ch05-03-method-syntax.html)
+
+Metodos são como funções `fn` que estão no contexto de uma `struct` (ou um enum ou uma característica objeto), seu primeiro parametro sempre será o `&self` que é uma referencia a si mesmo. Por exemplo:
+
+```rust
+struct Retangulo {
+    width: u32,
+    height: u32
+}
+impl Retangulo {
+    fn calc_area(&self) -> u32 {// self se refere as caracteristicas da instância de Retangulo
+        self.width * self.height
+    }
+}
+
+fn main() {
+    let rect1 = Retangulo {
+        width: 30,
+        height: 50,
+    };
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        rect1.calc_area()
+    );
+}
+```
+
+O `impl` (bloco de implementação) é a sintaxe responsável por determinar onde estarão os metodo de um `struct`.
