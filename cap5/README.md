@@ -104,7 +104,46 @@ Existem algumas Abreviações uteis no `struct` que podemos utilizar como:
   Basicamente, ele copia todos os valores que estão sob o efeito da sintaxe `..outro_struct`, mas troca os valores que foram explicitamente descritos como o `email` no exemplo acima.
   - **Obs.:** O uso do `..` deve vir depois do valores trocados.
 
-> **Warning**: Quando se utiliza o `=` como no ultimo exemplo, os valores de `user1` mudam de dono, sendo agora de `user2`, portanto `user1` perde os valores que estão na memoria `heap` como o `name`, porém os outros ainda podem ser utilizados. Dependendo da necessidade, o certo seria fazer com `deep copy`(usando `.clone()`) para o `name` que é o único que não implementa o `Copy`.
+> **Atenção**: Quando se utiliza o `=` como no ultimo exemplo, os valores de `user1` mudam de dono, sendo agora de `user2`, portanto `user1` perde os valores que estão na memoria `heap` como o `name`, porém os outros ainda podem ser utilizados. Dependendo da necessidade, o certo seria fazer com `deep copy`(usando `.clone()`) para o `name` que é o único que não implementa o `Copy`.
 
-## [Definindo estruturas semelhantes a unidades (Unit-Like Structs)](https://doc.rust-lang.org/book/ch05-01-defining-structs.html#defining-unit-like-structs)
+### [Definindo estruturas semelhantes a unidades (Unit-Like Structs)](https://doc.rust-lang.org/book/ch05-01-defining-structs.html#defining-unit-like-structs)
 
+Também é possível definir `structs` sem nenhum atributo, se comportando como um `()` uma tupla vazia.
+São úteis para implementar uma caracteristica, pois servem para implementar métodos em um tipo que não precisa guardar estado.
+
+```rust
+struct QualquerTipo;
+
+fn main() {
+    let coisa = QualquerTipo;
+}
+```
+
+## Exemplo de uso de `structs`
+
+```rust
+fn main() {
+    let ret = Retangulo {
+        width: 50,
+        heigth: 60,
+        unit: String::from("cm"),
+    };
+
+    let area_ret = calc_area(ret);
+
+    println!("Area do retangulo é: {}", area_ret);
+}
+
+fn calc_area(ret: Retangulo) -> String {
+    let a = ret.width * ret.heigth;
+    let mut str_a = a.to_string();
+    str_a.push_str(&    .unit);
+    str_a
+}
+
+struct Retangulo {
+    width: u32,
+    heigth: u32,
+    unit: String,
+}
+```
