@@ -90,3 +90,68 @@ let a: Option<i32>  = None; //Será um None. Precisa de anotçào de <T>, pois n
 - **Obs:** Onde `<T>` é um generico que diz que O tipo de pode ser qualquer um.
 
 ## [O `match` Construção de fluxo de controle](https://doc.rust-lang.org/book/ch06-02-match.html#the-match-control-flow-construct)
+
+O `match` permite comparar um valor com uma serie de padrões. Perfeito para o uso de enums, onde ele compara todas as possibilidades que aquele valor pode assumir.
+
+```rust
+enum HttpResponse {
+    OK,
+    Redirect(String),
+    ErrorClient(u16, String),
+    JsonData { status: u16, body: String },
+}
+
+fn handle_http_resp(res: HttpResponse) {
+    match res {
+        HttpResponse::OK => {
+            println!("OK");
+        }
+        HttpResponse::Redirect(url) => {
+            println!("{:?}", url);
+        }
+        HttpResponse::ErrorClient(status, err) => {
+            println!("stts: {}, err: {}", status, err);
+        }
+        HttpResponse::JsonData { status, body } => {
+            println!("stts: {:?}, body: {:?}", status, body);
+        }
+    }
+}
+```
+
+Ele necessariamente precisa ter ações para todas as possibilidade um valor, funcionando quase como um `switch` só que mais poderoso.
+
+### [Padrões que se ligam a valores](https://doc.rust-lang.org/book/ch06-02-match.html#patterns-that-bind-to-values)
+Os valores de um `enum` podem conter outros enums
+
+```rust
+#[derive(Debug)] // so we can inspect the state in a minute
+enum UsState {
+    Alabama,
+    Alaska,
+    // --snip--
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState),
+}
+
+fn value_in_cents(coin: Coin) -> u8 {
+    match coin {
+        Coin::Penny => 1,
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter(state) => {
+            println!("State quarter from {state:?}!");
+            25
+        }
+    }
+}
+```
+### [O `Option<T>` `match` Padrão](https://doc.rust-lang.org/book/ch06-02-match.html#the-optiont-match-pattern)
+
+```rust
+```

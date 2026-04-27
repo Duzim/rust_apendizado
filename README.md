@@ -44,3 +44,6 @@ Abaixo está a divisão de capítulos estudados. Navegue pelos links para acessa
   - _Borrowing_(Emprestimo)
   - Slices
 - [Capitulo 5- Structs](./cap5/)
+  - structs
+  - metodos
+- [Capitulo 6- Enums](./cap6/)
