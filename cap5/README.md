@@ -198,3 +198,40 @@ fn main() {
 ```
 
 O `impl` (bloco de implementação) é a sintaxe responsável por determinar onde estarão os metodo de um `struct`.
+
+O termo `self` refere-se a propria estrutura que no caso acima `Retangulo`
+
+### [Funções associadas](https://doc.rust-lang.org/book/ch05-03-method-syntax.html#associated-functions)
+
+Todas as funções definidas dentro de um `impl` bloco são chamados funções associadas porque estão associados ao tipo que leva o nome do `impl`. Podemos definir funções associadas que não têm `self` como seu primeiro parâmetro (e assim não são métodos) porque não precisam de uma instância do tipo com a qual trabalhar.
+
+```rust
+impl Rectangle {
+    fn square(size: u32) -> Self {
+        Self {
+            width: size,
+            height: size,
+        }
+    }
+}
+```
+
+Para chamar uma função associada usamos o `::`, que é analogo a chamar um metodo estático em outras linguagens. Sem a necessidade de uma instância.
+
+### [Múltiplo impl Blocos](https://doc.rust-lang.org/book/ch05-03-method-syntax.html#multiple-impl-blocks)
+
+Cada `struct` pode ter varios `impl`, funcionando como se fosse apenas um.
+
+```rust
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+}
+
+impl Rectangle {
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
+    }
+}
+```
