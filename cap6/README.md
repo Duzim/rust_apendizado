@@ -153,5 +153,78 @@ fn value_in_cents(coin: Coin) -> u8 {
 ```
 ### [O `Option<T>` `match` Padrão](https://doc.rust-lang.org/book/ch06-02-match.html#the-optiont-match-pattern)
 
+Dessa forma é possível encavalar varias chamadas de um afunção que dependa de `Option` em um parâmetro.
+Fazendo um `match` de `Option` retornar um tipo `Option`.
+Isso também é possível com diferentes `enums` e outros tipos.
+
 ```rust
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    match x {
+        None => None,
+        Some(i) => Some(i + 1),
+    }
+}
+
+let five = Some(5);
+let six = plus_one(five);
+let none = plus_one(None);
+
 ```
+
+### [As partidas são exaustivas](https://doc.rust-lang.org/book/ch06-02-match.html#matches-are-exhaustive)
+
+Obrigatoriamente em um `match` deve-se lidar com todas as possibilidades. Não permitindo "braços" sem respostas do que fazer com aquela possibilidade.
+
+### [Padrões Catch-All e o _ Espaço reservado](https://doc.rust-lang.org/book/ch06-02-match.html#catch-all-patterns-and-the-_-placeholder)
+
+É basicamente definir um lugar `dafault` para caso não seja nenhuma das outras opções. 
+Caso o valor seja relevante basta declarar um parametro seguido do `=>`, caso não seja relevante, basta utilizar uma `_` que o compilador não reclamará de não ser usada.
+
+#### Catch-All
+```rust
+match algo {
+    Algo(algo) => {
+        //faz algo 
+    },
+    outra_coisa => {
+        //tudo que não for nenhuma das outras opções cairá aqui 
+    }
+}
+```
+#### `_` Espaço reservado
+```rust
+match algo {
+    Algo(algo) => {
+        //faz algo 
+    },
+    _ => {
+        //tudo que não for nenhuma das outras opções cairá aqui 
+    }
+}
+```
+
+
+## [Fluxo de controle conciso com if let e let...else](https://doc.rust-lang.org/book/ch06-03-if-let.html)
+
+O `if let` é muito útil quando o restante das possibilidade não importam para um `match`.
+
+Por exemplo com match
+```rust
+fn funcao_faz_coisa(algo: i32) {
+    match algo {
+        Some(a) => {a},
+        _ => ()
+    }   
+}
+```
+Com o `if let`, a escrita fica mais limpa
+```rust
+fn funcao_faz_coisa(algo: i32) {
+    if let Some(a) = algo {
+        a //Faz algo com 'a'
+    }
+}
+```
+O `if let` pode também conter `else`, mas funciona como um `if else` normal.
+
+### [Permanecendo no “Caminho Feliz” com let...else](https://doc.rust-lang.org/book/ch06-03-if-let.html#staying-on-the-happy-path-with-letelse)
