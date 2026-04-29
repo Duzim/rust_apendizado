@@ -45,5 +45,9 @@ Abaixo está a divisão de capítulos estudados. Navegue pelos links para acessa
   - Slices
 - [Capitulo 5- Structs](./cap5/)
   - structs
-  - metodos
+  - metodos `impl`
 - [Capitulo 6- Enums](./cap6/)
+  - enum
+  - `match`
+  - `if let` e `let ... else`
+- [Capitulo 7- Crates](./cap7/)
