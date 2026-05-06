@@ -116,3 +116,25 @@ fn main() {
     // O compilador daria um erro de privacidade (pois não tem 'pub').
 }
 ```
+
+## [__Paths__ para referência a um item na árvore de módulos](https://doc.rust-lang.org/book/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html)
+
+Para mostrar ao Rust onde encontrar um item em uma árvore de módulos, usamos um caminho no mesmo maneira como usamos um caminho ao navegar em um sistema de arquivos.
+
+Um caminho pode assumir duas formas:
+
+- Um caminho absoluto é o caminho completo começando a partir de uma raiz de caixa; para código de uma caixa externa, o caminho absoluto começa com o nome da caixa e, para código da caixa atual, começa com o literal `crate`.
+
+- Um caminho relativo começa a partir do módulo atual e usa `self`, `super`, ou um identificador no módulo atual.
+
+Os caminhos absolutos e relativos são seguidos por um ou mais identificadores separados por dois pontos duplos (`::`).
+
+### [Expondo Caminhos com a Palavra-chave `pub`](https://doc.rust-lang.org/book/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#exposing-paths-with-the-pub-keyword)
+
+### [Iniciando caminhos relativos com `super`](https://doc.rust-lang.org/book/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#starting-relative-paths-with-super)
+
+### [Tornando `Structs` e `Enums` Públicos](https://doc.rust-lang.org/book/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#making-structs-and-enums-public)
+
+## [Trazendo Caminhos ao Escopo com a Palavra-chave `use`](https://doc.rust-lang.org/book/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html)
+
+## [Separando módulos em arquivos diferentes](https://doc.rust-lang.org/book/ch07-05-separating-modules-into-different-files.html)
