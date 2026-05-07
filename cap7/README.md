@@ -131,10 +131,194 @@ Os caminhos absolutos e relativos são seguidos por um ou mais identificadores s
 
 ### [Expondo Caminhos com a Palavra-chave `pub`](https://doc.rust-lang.org/book/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#exposing-paths-with-the-pub-keyword)
 
+Basicamente o `pub` torna algo em seu modulo publico, naturalmente todas as coisas dentro de um modulo são privadas. 
+
+```rust
+pub mod modulo_1 {
+    pub fn funcao(text: &str) {
+        println!("Função que faz algo [{}]", text);
+    }
+}
+```
+
+Como mostrado acima, a função e modulo estão publicos e podem ser utilizados fora de seu escopo, respeitando oque já foi dito sobre importação de modulos. Podendo sem usado em outro arquivo ou em outro contexto com:
+
+```rust
+mod nome_do_arquivo; //em caso se fosse em outro arquivo
+
+crate::nome_do_arquivo::modulo_1::funcao();//pode também ser utilizado o caminho relátiuvo.
+```
+
 ### [Iniciando caminhos relativos com `super`](https://doc.rust-lang.org/book/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#starting-relative-paths-with-super)
+
+O `super` é basicamente um `../` na navegação de arquivos e pastas, mas aplicado a modulos, permitindo andar para trás em modulos.
+
+```rust
+pub fn funcao_no_topo() {
+    println!("Chegamos ao topo!");
+}
+
+//Sim, isso é possivel (mesmo que não recomendado)
+pub mod nivel_1 {
+    pub mod nivel_2 {
+        pub mod nivel_3 {
+            pub mod nivel_4 {
+                pub fn tentar_acessar_o_topo() {
+                    // Subindo 4 níveis!
+                    super::super::super::super::funcao_no_topo();
+                }
+            }
+        }
+    }
+}
+```
+
+O código acima mostra um uso excessivo do `super`, nesse caso seria recomendado utilizar o `crate`. Porém nesse caso seria o mesmo que dizer em uma navegação de diretorios `../../../../funcao_no_topo` subindo 4 níveis de diretorio.
 
 ### [Tornando `Structs` e `Enums` Públicos](https://doc.rust-lang.org/book/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html#making-structs-and-enums-public)
 
+Quanto a `struct` e `enum`, caso usar `pub` antes da definição dos mesmo, ele será público, mas seus campos ainda serão privados em um `struct`. Deve-se útilizar `pub` em cada um dos campos públicos.
+
+```rust
+pub struct Customer {
+    pub nome: String,
+    idade: i8,
+}
+```
+
+No caso acima, `idade` é privado.
+
+Em contraste, se tornarmos público um `enum`, todas as suas variantes serão públicas. Nós só precisa do `pub` antes do `enum`
+
+```rust
+mod back_of_house {
+    pub enum Appetizer {
+        Soup,
+        Salad,
+    }
+}
+
+pub fn eat_at_restaurant() {
+    let order1 = back_of_house::Appetizer::Soup;
+    let order2 = back_of_house::Appetizer::Salad;
+}
+```
 ## [Trazendo Caminhos ao Escopo com a Palavra-chave `use`](https://doc.rust-lang.org/book/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html)
 
+O `use` é basicamente a criação de um _namespace_, sem a necessidade de todas as vezes ter que expecificar todo o caminho até a oque se deseja utilizar.
+
+```rust
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+use crate::front_of_house::hosting::add_to_waitlist;
+
+pub fn eat_at_restaurant() {
+    add_to_waitlist();
+}
+```
+
+### [Utilizando a palavra-chave `as`](https://doc.rust-lang.org/book/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html#providing-new-names-with-the-as-keyword)
+
+É basicamente a renomeação de algo. Como o seguinte:
+
+```rust
+use std::fmt::Result;
+use std::io::Result as IoResult;
+
+fn function1() -> Result {
+    // --snip--
+}
+
+fn function2() -> IoResult<()> {
+    // --snip--
+}
+```
+
+### [Reexportando nomes com `pub use`](https://doc.rust-lang.org/book/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html#re-exporting-names-with-pub-use)
+
+Quando colocamos um nome no escopo com o use palavra-chave, o nome é privado para o escopo para o qual o importamos. Para permitir que código fora desse escopo faça referência a esse nome como se tivesse sido definido nesse âmbito, podemos combinar `pub` e `use`. Esta técnica é chamada _reexportando_ porque estamos trazendo um item no escopo, mas também disponibilizando esse item para outros trazerem para seus escopo.
+
+```rust
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+
+pub use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+}
+```
+
+Permite utilizar o `hosting` como se fosse dominio do arquivo que usa o `pub use`.
+
+### [Usando pacotes externos](https://doc.rust-lang.org/book/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html#using-external-packages)
+
+Usando `crates` baixados como o `rand`, basta utilizar o `use` apenas adicionando aquele _namespace_ a seu escopo.
+
+```rust
+use rand::Rng;
+
+fn main() {
+    let secret_number = rand::thread_rng().gen_range(1..=100);
+}
+```
+
+### [Usando caminhos aninhados com listas no `use`](https://doc.rust-lang.org/book/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html#using-nested-paths-to-clean-up-use-lists)
+
+Ao invés de ter varia importações com o use de um mesmo modulo, pode-se aninha-las com `{}`.
+
+Sem aninhamento:
+```rust
+use std::cmp::Ordering;
+use std::io;
+```
+
+Com aninhamento: 
+
+```rust
+use std::{cmp::Ordering, io};
+```
+
+Pode-se utilizar qualquer nivel, mesmo de um mesmo módulo:
+
+```rust
+use std::io;
+use std::io::Write;
+```
+
+Com aninhamento: 
+
+```rust
+use std::io::{self, Write};
+```
+
+### [Importando Itens com o Operador `Glob`(`*`)](https://doc.rust-lang.org/book/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html#importing-items-with-the-glob-operator)
+
+Tráz tudo itens públicos definidos em um caminho para o escopo, podemos especifique esse caminho seguido pelo `*` operador glob:
+
+```rust
+use std::collections::*;
+```
+
 ## [Separando módulos em arquivos diferentes](https://doc.rust-lang.org/book/ch07-05-separating-modules-into-different-files.html)
+
+Para utilização de varios arquivos precisa-se chamar o modulo ou oque se deseja utilizar para o seu contexto atual com `mod`. Como se importasse o contexto alheio.
+
+```rust
+mod front_of_house;
+
+pub use crate::front_of_house::hosting;
+
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+}
+```
+
+no código acima, permite útilizar o `hosting` como se fosse daquele contexto e também utiliza o proprio `hosting`.
