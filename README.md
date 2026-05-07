@@ -51,3 +51,8 @@ Abaixo está a divisão de capítulos estudados. Navegue pelos links para acessa
   - `match`
   - `if let` e `let ... else`
 - [Capitulo 7- Crates](./cap7/)
+  - `mod`, `as`, `pub`.
+- [Capitulo 8- Coleções comuns](./cap8/)
+  - `vector`
+  - `String` em `UTF-8`
+  - `HashMap`
