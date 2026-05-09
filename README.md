@@ -56,3 +56,8 @@ Abaixo está a divisão de capítulos estudados. Navegue pelos links para acessa
   - `vector`
   - `String` em `UTF-8`
   - `HashMap`
+
+- [Capitulo 9- Tratamento de erros](./cap9/)
+  - `panic!`
+  - `Rsult<T, E>`
+  - Quando usa o `panic!`
