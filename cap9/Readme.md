@@ -14,4 +14,18 @@ A macro `panic!` para a execução do código, fazendo o programa parar de rodar
 panic = 'abort'
 ```
 
-## [Erros recuperáveis com Result](https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html)
+## [Erros recuperáveis com `Result`](https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html)
+
+Os erros recuperáveis são aquele que se quer tomar uma medida protetiva em seu programa, onde não tem a necessidade de parar totalmente o programa.
+
+O `Result` é um `enum` com 2 estados diferentes, `Ok` e `Err`, representando sucesso e erro, respectivamente. Do qual tem o `T` e `E` são parâmetros de tipo genéricos. `T` representa o tipo do valor que será retornado em um caso de sucesso dentro do `Ok`, e `E` representa o tipo de erro que será retornado em a caso de falha dentro do `Err`.
+
+```rust
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+```
+
+### [Correspondência em diferentes erros](https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html#matching-on-different-errors)
+
