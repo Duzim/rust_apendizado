@@ -1,0 +1,1 @@
+# Tipos genéricos(`Generic Types`), características(`Traits`) e tempos de vida(`Lifetimes`)
