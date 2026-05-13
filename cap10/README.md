@@ -300,3 +300,55 @@ fn main() {
 
 ### [Usando implementações padrão](https://doc.rust-lang.org/book/ch10-02-traits.html#using-default-implementations)
 
+Podemos também adidionar um comportamento à um característica mesmo sem sempre precisar refazer o corpo do metódo.
+
+```rust
+pub trait Summary {
+    fn summarize(&self) -> String {
+        String::from("(Read more...)")
+    }
+}
+
+impl Summary for NewsArticle {}
+
+fn main() {
+    let article = NewsArticle {
+        headline: String::from("Penguins win the Stanley Cup Championship!"),
+        location: String::from("Pittsburgh, PA, USA"),
+        author: String::from("Iceburgh"),
+        content: String::from(
+            "The Pittsburgh Penguins once again are the best \
+             hockey team in the NHL.",
+        ),
+    };
+
+    println!("New article available! {}", article.summarize());
+}
+
+```
+
+Basicamente adiucionamos um comportamento sem a necessidade de sobrescrever o metodo.
+
+E ambas as formas podem existir simultaneamente em uma única `trait`.
+
+```rust
+pub trait Summary {
+    fn summarize_author(&self) -> String;
+
+    fn summarize(&self) -> String {
+        format!("(Read more from {}...)", self.summarize_author())
+    }
+}
+
+impl Summary for SocialPost {
+    fn summarize_author(&self) -> String {
+        format!("@{}", self.username)
+    }
+}
+```
+
+### [Usando `Traits` como Parâmetros](https://doc.rust-lang.org/book/ch10-02-traits.html#using-traits-as-parameters)
+
+#### [`Trait` Ligado Sintaxe](https://doc.rust-lang.org/book/ch10-02-traits.html#trait-bound-syntax)
+
+#### []()
