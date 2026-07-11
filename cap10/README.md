@@ -327,7 +327,7 @@ fn main() {
 
 ```
 
-Basicamente adiucionamos um comportamento sem a necessidade de sobrescrever o metodo.
+Basicamente adicionamos um comportamento sem a necessidade de sobrescrever o metodo.
 
 E ambas as formas podem existir simultaneamente em uma única `trait`.
 
@@ -349,6 +349,114 @@ impl Summary for SocialPost {
 
 ### [Usando `Traits` como Parâmetros](https://doc.rust-lang.org/book/ch10-02-traits.html#using-traits-as-parameters)
 
+Como pode-se ver no seguinte bloco de código, podemos usar `Traits` como parâmetros.
+
+Qualquer tipo que implemente essa `Trait` pode ser utilizada, sem precisar ser especificada no parâmetro. Podemos utilizar os métodos padrões a essa `Trait`, como no caso o `summarize`.
+
+
+```rust
+pub fn notify(item: &impl Summary) {
+    println!("Breaking news! {}", item.summarize());
+}
+```
+
 #### [`Trait` Ligado Sintaxe](https://doc.rust-lang.org/book/ch10-02-traits.html#trait-bound-syntax)
 
-#### []()
+O caso mais comum de ser utilizado é da seguinte forma
+
+```rust
+pub fn notify<T: Summary>(item: &T) {
+    println!("Breaking news! {}", item.summarize());
+}
+```
+Em sintese é tem a mesma função de fazer o mesmo da sessão [anterior](#usando-traits-como-parâmetros).
+
+Utilizar essa sitaxe é mais simples em alguns casos, como quando temos mais de um parâmetro, do mesmo tipo.
+
+Ex.: usando `impl Trait`
+```rust
+pub fn notify(item1: &impl Summary, item2: &impl Summary) {
+```
+De outra forma,
+```rust
+pub fn notify<T: Summary>(item1: &T, item2: &T) {
+```
+
+
+#### [Limites de Múltiplos Traits com a Sintaxe `+`](https://doc.rust-lang.org/book/ch10-02-traits.html#multiple-trait-bounds-with-the--syntax)
+
+Usando mais de uma `Trait` com `+`, nesse caso, o `item` deve implementar ambas as `Traits`.
+
+```rust
+pub fn notify(item: &(impl Summary + Display)) {
+```
+ou
+```rust
+pub fn notify<T: Summary + Display>(item: &T) {
+```
+
+#### [Restrições de Trait mais claras com cláusulas `where`](https://doc.rust-lang.org/book/ch10-02-traits.html#clearer-trait-bounds-with-where-clauses)
+
+Exite uma desvantagem de usar múltiplas `Traits` como patâmetro, a difícil leitura da sintaxe. Como pode ser visto no seguinte:
+
+```rust
+fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32 {
+```
+
+podemos usar o `where` para deixar a sintaxe mais tragavel, como da seguinte forma
+
+```rust
+fn some_function<T, U>(t: &T, u: &U) -> i32
+where
+    T: Display + Clone,
+    U: Clone + Debug,
+{
+```
+
+### [Retornando tipos que implementam traits](https://doc.rust-lang.org/book/ch10-02-traits.html#returning-types-that-implement-traits)
+
+Também podemos usar a sintaxe `impl Trait` na posição de retorno para retornar a valor de algum tipo que implementa um traço, como mostrado aqui:
+
+```rust
+fn returns_summarizable() -> impl Summary {
+    SocialPost {
+        username: String::from("horse_ebooks"),
+        content: String::from(
+            "of course, as you probably already know, people",
+        ),
+        reply: false,
+        repost: false,
+    }
+}
+```
+
+No caso acima o a função `returns_summarizable` retorna o `SocialPost`.
+
+> Nota: Não é possível retornar mais de um tipo apenas por exemplo retornar `SocialPost` ou `NewsArticle`
+
+### [Usando Restrições de Trait para Implementar Métodos Condicionalmente](https://doc.rust-lang.org/book/ch10-02-traits.html#using-trait-bounds-to-conditionally-implement-methods)
+
+```rust
+use std::fmt::Display;
+
+struct Pair<T> {
+    x: T,
+    y: T,
+}
+
+impl<T> Pair<T> {
+    fn new(x: T, y: T) -> Self {
+        Self { x, y }
+    }
+}
+
+impl<T: Display + PartialOrd> Pair<T> {
+    fn cmp_display(&self) {
+        if self.x >= self.y {
+            println!("The largest member is x = {}", self.x);
+        } else {
+            println!("The largest member is y = {}", self.y);
+        }
+    }
+}
+```
