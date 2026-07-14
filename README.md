@@ -61,3 +61,8 @@ Abaixo está a divisão de capítulos estudados. Navegue pelos links para acessa
   - `panic!`
   - `Rsult<T, E>`
   - Quando usa o `panic!`
+
+- [Capitulo 10 - Tipos Genéricos, `Traits` e `lifetimes`](./cap10/)
+  - Generic Types
+  - `Traits`
+  - `lifetimes`

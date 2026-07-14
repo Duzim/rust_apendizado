@@ -436,6 +436,10 @@ No caso acima o a função `returns_summarizable` retorna o `SocialPost`.
 
 ### [Usando Restrições de Trait para Implementar Métodos Condicionalmente](https://doc.rust-lang.org/book/ch10-02-traits.html#using-trait-bounds-to-conditionally-implement-methods)
 
+Traços e limites de traço nos permitem escrever código que usa parâmetros de tipo genérico para reduzir a duplicação mas também especificar ao compilador que queremos o genérico tipo para ter um comportamento particular. O compilador pode então usar o limite de traço informações para verificar se todos os tipos de concreto utilizados com o nosso código fornecem o comportamento correto. Em linguagens digitadas dinamicamente, obteríamos um erro em runtime se chamássemos um método em um tipo que não definisse o método. Mas Ferrugem move esses erros para o tempo de compilação para que sejamos forçados a corrigir os problemas antes mesmo do nosso código ser capaz de ser executado. Além disso, não precisamos escrever código que verifica o comportamento em tempo de execução, porque já verificamos em tempo de compilação. Fazer isso melhora o desempenho sem ter que abrir mão da flexibilidade de genéricos.
+
+> Basicamente permite usar `Traits` de forma condicional, com uma especie de polimorfismo (_É apenas uma analogia_).
+
 ```rust
 use std::fmt::Display;
 
@@ -460,3 +464,7 @@ impl<T: Display + PartialOrd> Pair<T> {
     }
 }
 ```
+
+## [Validando referências com tempos de vida (`Lifetimes`)](https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#validating-references-with-lifetimes)
+
+Toda referência em Rust tem uma vida inteira, que é o escopo para o qual essa referência é válida. Na maioria das vezes, as vidas são implícitas e inferidas, assim como na maioria das vezes, os tipos são inferidos.
