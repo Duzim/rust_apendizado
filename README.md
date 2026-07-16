@@ -66,3 +66,5 @@ Abaixo está a divisão de capítulos estudados. Navegue pelos links para acessa
   - Generic Types
   - `Traits`
   - `lifetimes`
+
+- [Capitulo 11 - Testes Automatizados](./cap11/)

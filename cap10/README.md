@@ -467,4 +467,42 @@ impl<T: Display + PartialOrd> Pair<T> {
 
 ## [Validando referências com tempos de vida (`Lifetimes`)](https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#validating-references-with-lifetimes)
 
+Tempos de vida (*lifetimes*) são outro tipo de recurso genérico que já temos utilizado. Em vez de garantir que um tipo possua o comportamento desejado, os tempos de vida asseguram que as referências permaneçam válidas pelo tempo necessário.
+
 Toda referência em Rust tem uma vida inteira, que é o escopo para o qual essa referência é válida. Na maioria das vezes, as vidas são implícitas e inferidas, assim como na maioria das vezes, os tipos são inferidos.
+
+O que são? 
+> Lifetimes são anotações estáticas que o borrow checker do Rust usa para rastrear o escopo de validade das referências em tempo de compilação. Eles não alteram o tempo de vida real das variáveis na memória; apenas descrevem a relação de duração entre diferentes referências.
+
+Para que servem? 
+
+> Servem exclusivamente para garantir a segurança de memória, prevenindo dangling references (referências apontando para dados já destruídos ou fora de escopo). O compilador os utiliza para provar que uma referência nunca viverá mais do que o dado para o qual ela aponta.
+
+Como funciona?
+> Na maioria dos casos, o compilador aplica regras de Lifetime Elision e infere tudo automaticamente. Você só precisa escrever lifetimes (usando a sintaxe 'a) quando existe ambiguidade na relação de origem de uma referência.
+
+> Isso ocorre frequentemente ao retornar uma referência de uma função que recebe duas ou mais referências como parâmetro:
+
+```rust
+// A assinatura abaixo falha porque o compilador não sabe
+// se a referência retornada vem de 'x' ou de 'y'.
+// fn maior(x: &str, y: &str) -> &str { ... }
+
+// Correto: Declaramos um lifetime 'a. 
+// A assinatura indica que x, y e o retorno compartilham a mesma relação de vida.
+// O retorno só será válido pelo tempo da referência mais curta entre 'x' e 'y'.
+fn maior<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+```
+
+### [A Vida Estática](https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#the-static-lifetime)
+É um lifetime especial que indica que a referência vive durante toda a execução do programa. Literais de string possuem esse lifetime por padrão, pois seus dados são embutidos diretamente no binário compilado.
+
+```rust
+let s: &'static str = "I have a static lifetime.";
+```
