@@ -67,4 +67,6 @@ Abaixo está a divisão de capítulos estudados. Navegue pelos links para acessa
   - `Traits`
   - `lifetimes`
 
-- [Capitulo 11 - Testes Automatizados](./cap11/)
+- [Capitulo 11 - Testes Automatizados](./cap11/) **(INCOMPLETO)**
+
+- [Capitulo 12 - Criando um programa de linha de comando](./cap12/)

@@ -93,3 +93,155 @@ mod tests {
 ```
 
 ### [Adicionando mensagens de falha personalizadas](https://doc.rust-lang.org/book/ch11-01-writing-tests.html#adding-custom-failure-messages)
+Pode-se também adicionar uma mensagem  personalizada, adicionando mais um parametro nas macros já descritas.
+
+como no seguite:
+
+```rust
+#[test]
+fn greeting_contains_name() {
+    let result = greeting("Carol");
+    assert!(
+        result.contains("Carol"),
+        "Greeting did not contain name, value was `{result}`"
+    );
+}
+```
+
+### [Verificando se há pânico com `should_panic`](https://doc.rust-lang.org/book/ch11-01-writing-tests.html#checking-for-panics-with-should_panic)
+Além de verificar os valores de retorno, é importante verificar se o nosso código lida com condições de erro como esperamos.
+
+Testamos isso com a diretiva `#[should_panic]` como mostrado no seguinte código
+```rust
+pub struct Guess {
+    value: i32,
+}
+
+impl Guess {
+    pub fn new(value: i32) -> Guess {
+        if value < 1 || value > 100 {
+            panic!("Guess value must be between 1 and 100, got {value}.");
+        }
+
+        Guess { value }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[should_panic]
+    fn greater_than_100() {
+        Guess::new(200);
+    }
+}
+```
+
+Alguns testes com o `should_panic` podem não funcionar perfeitamente, portando especificamos cada vez mais o tipo de `panic` esperado com o `expected`. Como Mostrado no seguinte código:
+
+```rust
+// --snip--
+
+impl Guess {
+    pub fn new(value: i32) -> Guess {
+        if value < 1 {
+            panic!(
+                "Guess value must be greater than or equal to 1, got {value}."
+            );
+        } else if value > 100 {
+            panic!(
+                "Guess value must be less than or equal to 100, got {value}."
+            );
+        }
+
+        Guess { value }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[should_panic(expected = "less than or equal to 100")]
+    fn greater_than_100() {
+        Guess::new(200);
+    }
+}
+```
+
+### [Usando `Result<T, E>` em testes](https://doc.rust-lang.org/book/ch11-01-writing-tests.html#using-resultt-e-in-tests)
+Também podemos escrever testes que usam `Result<T, E>`, como podemos ver no seguinte trecho
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() -> Result<(), String> {
+        let result = add(2, 2);
+
+        if result == 4 {
+            Ok(())
+        } else {
+            Err(String::from("two plus two does not equal four"))
+        }
+    }
+}
+```
+A função `it_works`  agora tem o tipo de retorno `Result<(), String>`. No corpo da função, em vez de chamar a macro `assert_eq!`, voltamos `Ok(())` quando o teste passa e um `Err` com a `String` no interior quando o teste falha.
+
+Você não pode usar a anotação `#[should_panic]` em testes que utilizam `Result<T, E>`. Para verificar se uma operação retorna uma variante `Err`, não utilize o operador de interrogação no valor `Result<T, E>`. Em vez disso, utilize `assert!(value.is_err())`.
+
+> Nota: Precisa ser tipado se não o compilador vai reclamar.
+
+## [Controlando Como Os Testes São Executados](https://doc.rust-lang.org/book/ch11-02-running-tests.html#controlling-how-tests-are-run)
+
+### [Execução de testes em paralelo ou consecutivamente](https://doc.rust-lang.org/book/ch11-02-running-tests.html#running-tests-in-parallel-or-consecutively)
+Quando você executa vários testes, por padrão, eles são executados em paralelo usando threads, significando que eles terminam de correr mais rapidamente e você recebe feedback mais cedo. Como os testes estão sendo executados ao mesmo tempo, você deve se certificar de que seus testes não dependem uns dos outros ou de qualquer estado compartilhado, incluindo um ambiente compartilhado, como o diretório de trabalho atual ou variáveis de ambiente.
+
+Se você não quiser executar os testes em paralelo ou simplesmente um olhar mais fino pode-se usar o comando `--test-threads`
+
+```bash
+$ cargo test -- --test-threads=1
+```
+
+Definindo no número de threads para `1`, não utilizan nenhum paralelismo, assim executando um teste atrás do outro.
+
+### [Exibindo a saída da função](https://doc.rust-lang.org/book/ch11-02-running-tests.html#showing-function-output)
+
+utiliza-se o `print!` ou o `println!` normal e o comando `--show-output` como no seguinte:
+
+```bash
+$ cargo test -- --show-output
+```
+
+código com o `println!`:
+```rust
+fn prints_and_returns_10(a: i32) -> i32 {
+    println!("I got the value {a}");
+    10
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn this_test_will_pass() {
+        let value = prints_and_returns_10(4);
+        assert_eq!(value, 10);
+    }
+
+    #[test]
+    fn this_test_will_fail() {
+        let value = prints_and_returns_10(8);
+        assert_eq!(value, 5);
+    }
+}
+```
+
+### [Executando um subconjunto de testes por nome](https://doc.rust-lang.org/book/ch11-02-running-tests.html#running-a-subset-of-tests-by-name)

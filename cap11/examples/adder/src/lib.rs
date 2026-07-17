@@ -17,6 +17,20 @@ impl Rectangle {
     }
 }
 
+pub struct Guess {
+    value: i32,
+}
+
+impl Guess {
+    pub fn new(value: i32) -> Guess {
+        if value < 1 || value > 100 {
+            panic!("Guess value must be between 1 and 100, got {value}.");
+        }
+
+        Guess { value }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -25,6 +39,17 @@ mod tests {
     fn exploration() {
         let result = add(2, 2);
         assert_eq!(result, 4);
+    }
+
+    #[test]
+    fn it_works() -> Result<(), String> {
+        let res = add(2, 2);
+
+        if res == 4 {
+            Ok(())
+        } else {
+            Err(String::from("DEU CERTO COM Result"))
+        }
     }
 
     #[test]
@@ -67,6 +92,11 @@ mod tests {
         assert!(!smaller.can_hold(&larger));
     }
 
+    #[test]
+    #[should_panic]
+    fn greater_than_100() {
+        Guess::new(200);
+    }
     // #[test]
     // fn not_works() {
     //     let res = add(2, 8);
