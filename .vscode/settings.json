@@ -1,6 +1,6 @@
 {
   "code-runner.executorMap": {
-    "rust": "cargo run"
+    "rust": "cd $dir && cargo run"
   },
   "code-runner.runInTerminal": true
 }
