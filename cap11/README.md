@@ -245,3 +245,124 @@ mod tests {
 ```
 
 ### [Executando um subconjunto de testes por nome](https://doc.rust-lang.org/book/ch11-02-running-tests.html#running-a-subset-of-tests-by-name)
+
+Ao executar o comando `cargo test` rodamos todos os testes, para rodar um único teste, basta adicionar o nome do teste
+
+```bash
+$ cargo test nome_do_teste
+```
+
+O parametro de nome de testes pega nomes parciais também, ou seja, apenas um pedaço do nome.
+
+```bash
+$ cargo test nome # <- pedaço do nome do teste
+```
+
+### [Ignorar testes, a menos que especificamente solicitado.](https://doc.rust-lang.org/book/ch11-02-running-tests.html#ignoring-tests-unless-specifically-requested)
+Testes podem ser ignorar um teste com a diretiva `#[ignore]`, como no seguinte:
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let result = add(2, 2);
+        assert_eq!(result, 4);
+    }
+
+    #[test]
+    #[ignore]
+    fn expensive_test() {
+        // code that takes an hour to run
+    }
+}
+```
+
+caso queira rodar apenas os ignorados podemos usar o seguinte comando:
+
+```bash
+$ cargo test -- --ignored
+```
+
+## [Organização de Teste](https://doc.rust-lang.org/book/ch11-03-test-organization.html#test-organization)
+
+A comunidade Rust pensa em testes em termos de duas categorias principais: _testes unitários_ e _testes de integração_.
+
+- Testes unitários são pequenos e mais focados, testando um módulo de cada vez de forma isolada, e podem testar interfaces privadas.
+
+- Os testes de integração são totalmente externos à sua biblioteca e utilizam o seu código da mesma forma que qualquer outro código externo faria, utilizando apenas a interface pública e, potencialmente, exercitando múltiplos módulos por teste.
+
+### [Testes unitários](https://doc.rust-lang.org/book/ch11-03-test-organization.html#unit-tests)
+
+Testes não vão para o build final o `cfg` diz ao rust que é uma configuração, no caso, de testes.
+
+### [Testes de funções privadas](https://doc.rust-lang.org/book/ch11-03-test-organization.html#private-function-tests)
+
+Rust permite testar funções privadas, como no seguinte:
+
+```rust
+pub fn add_two(a: u64) -> u64 {
+    internal_adder(a, 2)
+}
+
+fn internal_adder(left: u64, right: u64) -> u64 {
+    left + right
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn internal() {
+        let result = internal_adder(2, 2);
+        assert_eq!(result, 4);
+    }
+}
+```
+
+Itens em módulos filhos podem utilizar itens de seus módulos ancestrais. Neste teste, trazemos para o escopo todos os itens pertencentes ao módulo pai do módulo de testes usando `use super::*`; assim, o teste pode chamar `internal_adder`. Se você acha que funções privadas não devem ser testadas, não há nada no Rust que o obrigue a fazê-lo.
+
+### [Testes de Integração](https://doc.rust-lang.org/book/ch11-03-test-organization.html#integration-tests)
+
+No Rust, os testes de integração são totalmente externos à sua biblioteca. Eles usam o seu biblioteca da mesma forma que qualquer outro código faria, o que significa que eles só podem chamar funções que fazem parte da API pública da sua biblioteca.
+
+#### [O Diretório de testes](https://doc.rust-lang.org/book/ch11-03-test-organization.html#the-tests-directory)
+Para esse tipo de teste, é criado um diretorio fora do projeto como no seguinte exemplo.
+
+```
+adder
+├── Cargo.lock
+├── Cargo.toml
+├── src
+│   └── lib.rs
+└── tests
+    └── integration_test.rs
+```
+
+Neste caso não é necessario usar a diretiva `#[cfg(test)]` pois o cargo trata o diretorio de teste já como teste.
+
+Para esse caso ainda podemos usar o nome do teste para especifica-lo, mas também podemos especificar o arquivo.
+
+```bash
+$ cargo test --test integration_test
+```
+
+#### [Submódulos em Testes de Integração](https://doc.rust-lang.org/book/ch11-03-test-organization.html#submodules-in-integration-tests)
+
+Quando se quer utilizar funções utilitárias que não são teste, por noma utilizamos o `common.rs` ou caso não queira que saia no terminal, podemos usar o diretorio `common` como no seguinte.
+
+```rust
+├── Cargo.lock
+├── Cargo.toml
+├── src
+│   └── lib.rs
+└── tests
+    ├── common
+    │   └── mod.rs
+    └── integration_test.rs
+```
+
+Nomear o arquivo dessa forma instrui o Rust a não tratar o módulo comum como um arquivo de teste de integração. 
