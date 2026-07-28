@@ -61,3 +61,74 @@ fn main() {
     );
 }
 ```
+
+No trecho de código um exemplo de utilização do `closures` no `unwrap_or_else` do qual ao resultado ser um `None` (uma das possibilidades de `Option`) ele executa o trecho `|| {}` assim como uma callback do javascript sendo práticamente equivalentes o trecho `|| {...}` com o seguinte `() => {...}`.
+
+### [Inferência e Anotação de Tipos de Fechamento](https://doc.rust-lang.org/book/ch13-01-closures.html#inferring-and-annotating-closure-types)
+
+Os `closures` permitem não anotar o tipos de retorno, permitindo uma sintaxe mais simple, inferindo com base no retorno da função.
+Como podemos ver no seguinte
+
+```rust
+fn  add_one_v1   (x: u32) -> u32 { x + 1 }
+let add_one_v2 = |x: u32| -> u32 { x + 1 };
+let add_one_v3 = |x|             { x + 1 };
+let add_one_v4 = |x|               x + 1  ;
+```
+
+podemos executar um `closures` como uma função comum
+
+```rust
+let example_closure = |x| x;
+
+let n = example_closure(5);
+```
+
+### [Captura de referências ou mover a propriedade](https://doc.rust-lang.org/book/ch13-01-closures.html#capturing-references-or-moving-ownership)
+
+`Closures` podem capturar valores de seu ambiente de três maneiras, que correspondem diretamente às três formas de uma função receber um parâmetro: empréstimo imutável, empréstimo mutável e transferência de propriedade. A `closure` decidirá qual dessas formas utilizar com base no que o corpo da função faz com os valores capturados.
+
+
+- Podemos ter múltiplas referências imutáveis, com o seguinte uso de uma variavel.
+```rust
+fn main() {
+    let list = vec![1, 2, 3];
+    println!("Before defining closure: {list:?}");
+
+    let only_borrows = || println!("From closure: {list:?}");
+
+    println!("Before calling closure: {list:?}");
+    only_borrows();
+    println!("After calling closure: {list:?}");
+}
+```
+
+- O fechamento agora captura uma referência mutável.
+```rust
+fn main() {
+    let mut list = vec![1, 2, 3];
+    println!("Before defining closure: {list:?}");
+
+    let mut borrows_mutably = || list.push(7);
+
+    borrows_mutably();
+    println!("After calling closure: {list:?}");
+}
+```
+
+Quando `borrows_mutably` é definida, ela captura uma referência mutável para `list`. Não utilizamos a *closure* novamente após ela ser chamada, portanto, o empréstimo mutável é encerrado. Entre a definição e a chamada da *closure*, não é permitido um empréstimo imutável para impressão, pois nenhum outro empréstimo é permitido quando existe um empréstimo mutável. Tente adicionar um `println!` nesse ponto para ver qual mensagem de erro você recebe!
+
+
+
+- Transferência de propriedade, Podemos forçar a transferencia de propriedade com a sintaxe `move` antes da *closure*.
+
+```rust
+let list = vec![1, 2, 3];
+println!("Antes da definição do closure: {list:?}");
+
+thread::spawn(move || println!("Vem do thread: {list:?}"))
+    .join()
+    .unwrap();
+```
+
+### [Movendo valores capturados fora de fechamentos](https://doc.rust-lang.org/book/ch13-01-closures.html#moving-captured-values-out-of-closures)

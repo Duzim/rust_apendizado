@@ -1,3 +1,5 @@
+use std::thread;
+
 #[derive(Debug, PartialEq, Copy, Clone)]
 enum ShirtColor {
     Red,
@@ -31,23 +33,44 @@ impl Inventory {
 }
 
 fn main() {
-    let store = Inventory {
-        shirts: vec![ShirtColor::Blue, ShirtColor::Red, ShirtColor::Blue],
-    };
+    // let store = Inventory {
+    //     shirts: vec![ShirtColor::Blue, ShirtColor::Red, ShirtColor::Blue],
+    // };
 
-    let user_prefix1 = Some(ShirtColor::Red);
-    let giveaway1 = store.giveaway(user_prefix1);
+    // let user_prefix1 = Some(ShirtColor::Red);
+    // let giveaway1 = store.giveaway(user_prefix1);
 
-    println!(
-        "The user with preference {:?} gets {:?}",
-        user_prefix1, giveaway1
-    );
+    // println!(
+    //     "The user with preference {:?} gets {:?}",
+    //     user_prefix1, giveaway1
+    // );
 
-    let user_prefix2 = None;
+    // let user_prefix2 = None;
 
-    let giveaway2 = store.giveaway(user_prefix2);
-    println!(
-        "The user with preference {:?} gets {:?}",
-        user_prefix2, giveaway2
-    );
+    // let giveaway2 = store.giveaway(user_prefix2);
+    // println!(
+    //     "The user with preference {:?} gets {:?}",
+    //     user_prefix2, giveaway2
+    // );
+
+    // let list = vec![1, 2, 3];
+    // let closure = || println!("Imprime lista: {:?}", list);
+
+    // println!("Lista no println: {:?}", list);
+    // closure();
+
+    // let mut list = vec![1, 2, 3];
+    // println!("Before defining closure: {list:?}");
+
+    // let mut borrows_mutably = || list.push(7);
+
+    // borrows_mutably();
+    // println!("After calling closure: {list:?}");
+
+    let list = vec![1, 2, 3];
+    println!("Antes da definição do closure: {list:?}");
+
+    thread::spawn(move || println!("Vem do thread: {list:?}"))
+        .join()
+        .unwrap();
 }
